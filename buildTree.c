@@ -9,7 +9,7 @@
 #include "buildTree.h"
 #include "tree-Structure.h"
 #include <math.h>
-
+int addNum=0,rmNum=0;
 void makeChildren( Node *parent ) {
     
     double x = parent->xy[0];
@@ -61,30 +61,41 @@ int getFlag(Node *node,double time){
     return flag;
 }
 void addOrRemove( Node *node, double time){
+    int maxlevel=6;
     for (int i=0;i<4;i++){
         int f=getFlag(node->child[i], time);
-        if (f==1){
+        if (f==1&&node->child[i]->level<maxlevel){
             makeChildren(node->child[i]);
+            addNum+=4;
         }
         if (f==-1){
             RemoveChildren(node);
+            rmNum+=4;
             break;
         }
     }
     
     return;
 }
-void adapt( Node *head){
+void addmove( Node *head){
     if (head->child[0]!=NULL&&head->child[0]->child[0]==NULL){
         addOrRemove(head, 0.0);
     }
     else if (head->child[0]!=NULL&&head->child[0]->child[0]!=NULL){
         for (int i=0;i<4;i++){
-            adapt(head->child[i]);
+            addmove(head->child[i]);
         }
         
     }
     
     return;
 }
-
+void adapt(Node *head){
+    int initAdd=-1, initRm=-1;
+    while (initAdd!=addNum&&initRm!=rmNum) {
+        initAdd=addNum;
+        initRm=rmNum;
+        addmove(head);
+    }
+    return;
+}
