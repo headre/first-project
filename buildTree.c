@@ -61,18 +61,22 @@ int getFlag(Node *node,double time){
     return flag;
 }
 void addOrRemove( Node *node, double time){
-    int maxlevel=6;
+    int maxlevel=6,mark=0;
     for (int i=0;i<4;i++){
         int f=getFlag(node->child[i], time);
         if (f==1&&node->child[i]->level<maxlevel){
             makeChildren(node->child[i]);
             addNum+=4;
+            mark=1;
         }
-        if (f==-1){
-            RemoveChildren(node);
-            rmNum+=4;
-            break;
+        if (f==0){
+            mark=2;
         }
+    }
+    if (mark==0){
+        printf("%d\n",mark);
+        RemoveChildren(node);
+        rmNum+=4;
     }
     
     return;
